@@ -2,7 +2,7 @@
 
 GKE_NAME=focused-world-310920-gke
 GKE_REGION=us-east4
-ARGOCD_VERSION==$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+ARGOCD_VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 
 # Get credentials
 gcloud container clusters get-credentials $GKE_NAME --region $GKE_REGION
@@ -27,7 +27,7 @@ PWD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.da
 #PWD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o jsonpath='{.items[0].metadata.name}')
 HOST=$(kubectl get svc -n argocd argocd-server -o jsonpath='{.status.loadBalancer.ingress[0].*}')
 argocd login $HOST --insecure --username admin --password $PWD
-$CONTEXT_NAME=$(kubectl config get-contexts -o name)
+CONTEXT_NAME=$(kubectl config get-contexts -o name)
 argocd cluster add $CONTEXT_NAME
 
 echo ''
